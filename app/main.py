@@ -54,13 +54,13 @@ def parse_redirection(args):
     append = False
     error_append = False
 
-    if ">>" in args:
-        idx = args.index(">>")
+    if ">>" in args or "1>>" in args:
+        idx = args.index(">>") if ">>" in args else args.index("1>>")
         output_file = args[idx + 1]
         args = args[:idx]
         append = True
-    elif ">" in args:
-        idx = args.index(">")
+    elif ">" in args or "1>" in args:
+        idx = args.index(">") if ">" in args else args.index("1>")
         output_file = args[idx + 1]
         args = args[:idx]
 
