@@ -55,7 +55,7 @@ def main():
         sys.stdout.write("$ ")
         sys.stdout.flush()
 
-        command, *args = input().split(" ")
+        command, *args = shlex.split(input())
         if command in VALID_COMMAND_DICT:
             VALID_COMMAND_DICT[command](args)
             continue
