@@ -39,6 +39,8 @@ def main():
         if command in VALID_COMMAND_DICT:
             VALID_COMMAND_DICT[command](args)
             continue
+        elif command == "pwd":
+            print(f"{os.getcwd()}")
         elif executable := locate_executable(command):
             subprocess.run([executable, *args])
         else:
