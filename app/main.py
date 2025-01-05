@@ -4,13 +4,16 @@ def main():
     while True:
         sys.stdout.write("$ ")
         sys.stdout.flush()
-        command = input()
-        
+        user_input = input()
+        [command, args] = user_input.split(" ", 1)
+
         match command:
-            case "exit 0": 
-                break
+            case "exit": 
+                sys.exit(args)
+            case "echo":
+                print(f"{args}")
             case _:
-                print(f"{command}: command not found")
+                print(f"{command} {args}: command not found")
 
 if __name__ == "__main__":
     main()
