@@ -14,35 +14,24 @@ def locate_executable(command):
 def handle_exit(args):
     sys.exit(int(args[0]) if args else 0)
 
-def handle_echo(args, output_file=None):
-    output = " ".join(args)
-    if output_file:
-        with open(output_file, 'w') as file:
-            file.write(output + "\n")
-    else:
-        print(output)
+def handle_echo(args):
+    for i in range(len(args)):
+        if (args[i].startswith("'") and args[i].endswith("'")) or (
+            args[i].startswith('"') and args[i].endswith('"')
+        ):
+            args[i] = args[i][1:-1]  # Remove surrounding quotes
+    print(" ".join(args))
 
-def handle_type(args, output_file=None):
-    result = ""
+def handle_type(args):
     if args[0] in VALID_COMMAND_DICT:
-        result = f"{args[0]} is a shell builtin"
+        print(f"{args[0]} is a shell builtin")
     elif executable := locate_executable(args[0]):
-        result = f"{args[0]} is {executable}"
+        print(f"{args[0]} is {executable}")
     else:
-        result = f"{args[0]} not found"
-    if output_file:
-        with open(output_file, 'w') as file:
-            file.write(result + "\n")
-    else:
-        print(result)
+        print(f"{args[0]} not found")
 
-def handle_pwd(args, output_file=None):
-    output = os.getcwd()
-    if output_file:
-        with open(output_file, 'w') as file:
-            file.write(output + "\n")
-    else:
-        print(output)
+def handle_pwd(args):
+    print(f"{os.getcwd()}")
 
 def handle_cd(args):
     path = "".join(args)
@@ -59,51 +48,68 @@ VALID_COMMAND_DICT = {
     "cd": handle_cd,
 }
 
-def parse_redirection(command_parts):
-    if '>' in command_parts:
-        redirection_index = command_parts.index('>')
-        if redirection_index == len(command_parts) - 1:
-            raise ValueError("Syntax error: unexpected end of file")
-        output_file = command_parts[redirection_index + 1]
-        command_parts = command_parts[:redirection_index]
-        return command_parts, output_file
-    return command_parts, None
+def parse_redirection(args):
+    output_file = None
+    error_file = None
+    append = False
+    error_append = False
+
+    if ">>" in args:
+        idx = args.index(">>")
+        output_file = args[idx + 1]
+        args = args[:idx]
+        append = True
+    elif ">" in args:
+        idx = args.index(">")
+        output_file = args[idx + 1]
+        args = args[:idx]
+
+    if "2>>" in args:
+        idx = args.index("2>>")
+        error_file = args[idx + 1]
+        args = args[:idx]
+        error_append = True
+    elif "2>" in args:
+        idx = args.index("2>")
+        error_file = args[idx + 1]
+        args = args[:idx]
+
+    return args, output_file, error_file, append, error_append
+
+def execute_command(command, args):
+    args, output_file, error_file, append, error_append = parse_redirection(args)
+    stdout = None
+    stderr = None
+
+    if output_file:
+        mode = "a" if append else "w"
+        stdout = open(output_file, mode)
+
+    if error_file:
+        mode = "a" if error_append else "w"
+        stderr = open(error_file, mode)
+
+    try:
+        if command in VALID_COMMAND_DICT:
+            VALID_COMMAND_DICT[command](args)
+        elif executable := locate_executable(command):
+            subprocess.run([executable, *args], stdout=stdout, stderr=stderr)
+        else:
+            print(f"{command}: command not found")
+    finally:
+        if stdout:
+            stdout.close()
+        if stderr:
+            stderr.close()
 
 def main():
     while True:
         sys.stdout.write("$ ")
         sys.stdout.flush()
 
-        try:
-            user_input = input()
-            if not user_input.strip():
-                continue
-
-            command_parts, output_file = parse_redirection(shlex.split(user_input))
-            if not command_parts:
-                continue
-
-            command = command_parts[0]
-            args = command_parts[1:]
-
-            if command in VALID_COMMAND_DICT:
-                VALID_COMMAND_DICT[command](args, output_file)
-            elif executable := locate_executable(command):
-                with open(output_file, 'w') if output_file else sys.stdout as out:
-                    subprocess.run([executable] + args, stdout=out, stderr=sys.stderr)
-            else:
-                message = f"{command}: command not found"
-                if output_file:
-                    with open(output_file, 'w') as file:
-                        file.write(message + "\n")
-                else:
-                    print(message)
-        except EOFError:
-            break
-        except ValueError as e:
-            print(e)
-        except Exception as e:
-            print(f"Error: {e}")
+        command, *args = shlex.split(input())
+        execute_command(command, args)
+        sys.stdout.flush()
 
 if __name__ == "__main__":
     main()
