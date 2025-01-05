@@ -31,7 +31,7 @@ def handle_cd(args):
     path = "".join(args)
     try:
         os.chdir("{path}")
-    except FileNotFoundError:
+    except OSError:
         print(f"cd: {path}: No such file or directory")
 
 VALID_COMMAND_DICT = {
