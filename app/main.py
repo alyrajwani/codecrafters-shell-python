@@ -27,18 +27,26 @@ def handle_type(args):
 def handle_pwd(args):
     print(f"{os.getcwd()}")
 
+def handle_cd(args):
+    path = "".join(args)
+    try:
+        os.chdir("{path}")
+    except FileNotFoundError:
+        print(f"cd: {path}: No such file or directory")
+
 VALID_COMMAND_DICT = {
-    "exit": handle_exit,
-    "echo": handle_echo,
-    "type": handle_type,
-    "pwd" : handle_pwd,
-}
+        "exit"  : handle_exit,
+        "echo"  : handle_echo,
+        "type"  : handle_type,
+        "pwd"   : handle_pwd,
+        "cd"    : handle_cd,
+        }
 
 def main():
     while True:
         sys.stdout.write("$ ")
         sys.stdout.flush()
-        
+
         command, *args = input().split(" ")
         if command in VALID_COMMAND_DICT:
             VALID_COMMAND_DICT[command](args)
