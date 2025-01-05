@@ -24,10 +24,14 @@ def handle_type(args):
     else:
         print(f"{args[0]} not found")
 
+def handle_pwd(args):i
+    print(f"{os.getcwd()}")
+
 VALID_COMMAND_DICT = {
     "exit": handle_exit,
     "echo": handle_echo,
     "type": handle_type,
+    "pwd" : handle_pwd,
 }
 
 def main():
@@ -39,8 +43,6 @@ def main():
         if command in VALID_COMMAND_DICT:
             VALID_COMMAND_DICT[command](args)
             continue
-        elif command == "pwd":
-            print(f"{os.getcwd()}")
         elif executable := locate_executable(command):
             subprocess.run([executable, *args])
         else:
