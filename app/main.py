@@ -20,7 +20,7 @@ def main():
             case "echo":
                 handle_echo(command, args)
             case "type":
-                handle_type(command, args, path)
+                handle_type(command, args, paths)
             case _:
                 print(f"{command}: command not found")
 
