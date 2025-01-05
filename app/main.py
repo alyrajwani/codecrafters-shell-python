@@ -5,7 +5,10 @@ def main():
         sys.stdout.write("$ ")
         sys.stdout.flush()
         user_input = input()
-        [command, args] = user_input.split(" ", 1)
+        if len(user_input.split(" ", 1)) == 1:
+            [command] = user_input.split(" ", 1)
+        else:
+            [command, args] = user_input.split(" ", 1)
 
         match command:
             case "exit": 
