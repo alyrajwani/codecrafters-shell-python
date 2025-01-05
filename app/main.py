@@ -37,7 +37,7 @@ def main():
         
         command, *args = input().split(" ")
         if command in VALID_COMMAND_DICT:
-            builtins[command](args)
+            VALID_COMMAND_DICT[command](args)
             continue
         elif executable := locate_executable(command):
             subprocess.run([executable, *args])
