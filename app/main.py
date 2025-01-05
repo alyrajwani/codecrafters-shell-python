@@ -7,7 +7,7 @@ def main():
         sys.stdout.flush()
         command = input()
         if command not in valid_commands:
-            print(f"${command}: command not found")
+            print(f"{command}: command not found")
             continue
 
 if __name__ == "__main__":
