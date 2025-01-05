@@ -36,11 +36,10 @@ def handle_exit(command, args):
 def handle_type(command, args):
     if not args:
         pass
+    elif args in VALID_COMMANDS:
+        print(f"{args} is a shell builtin")
     else:
-        if args in VALID_COMMANDS:
-            print(f"{args} is a shell builtin")
-        else:
-            print(f"{args}: not found")
+        print(f"{args}: not found")
 
 if __name__ == "__main__":
     main()
