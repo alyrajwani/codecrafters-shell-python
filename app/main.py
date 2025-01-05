@@ -24,7 +24,7 @@ def handle_type(args):
     else:
         print(f"{args[0]} not found")
 
-def handle_pwd(args):i
+def handle_pwd(args):
     print(f"{os.getcwd()}")
 
 VALID_COMMAND_DICT = {
