@@ -15,8 +15,6 @@ def handle_exit(args):
     sys.exit(int(args[0]) if args else 0)
 
 def handle_echo(args):
-    echoed = " ".join(args)
-    args = shlex.split(echoed)
     for i in range(len(args)):
         if (args[i].startswith("'") and args[i].endswith("'")) or (
             args[i].startswith('"') and args[i].endswith('"')
