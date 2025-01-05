@@ -22,7 +22,10 @@ def main():
             case "type":
                 handle_type(command, args, paths)
             case _:
-                print(f"{command}: command not found")
+                if os.path.isfile(command):
+                    os.system(command)
+                else:
+                    print(f"{command}: command not found")
 
 def handle_echo(command, args):
     if not args:
