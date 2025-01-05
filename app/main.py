@@ -20,7 +20,7 @@ def handle_echo(args):
             args[i].startswith('"') and args[i].endswith('"')
         ):
             args[i] = args[i][1:-1]  # Remove surrounding quotes
-    print(" ".join(args))
+    return " ".join(args)
 
 def handle_type(args):
     if args[0] in VALID_COMMAND_DICT:
@@ -91,7 +91,12 @@ def execute_command(command, args):
 
     try:
         if command in VALID_COMMAND_DICT:
-            VALID_COMMAND_DICT[command](args)
+            result = VALID_COMMAND_DICT[command](args)
+            if result:
+                if stdout:
+                    stdout.write(result + "\n")
+                else:
+                    print(result)
         elif executable := locate_executable(command):
             subprocess.run([executable, *args], stdout=stdout, stderr=stderr)
         else:
@@ -113,4 +118,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
