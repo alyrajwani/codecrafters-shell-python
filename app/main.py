@@ -23,19 +23,19 @@ def main():
 
 def handle_echo(command, args):
     if not args:
-        continue
+        pass
     else:
         print(f"{args}")
 
 def handle_exit(command, args):
     if not args:
-        continue
+        pass
     else:
         exit(int(args))
 
 def handle_type(command, args):
     if not args:
-        continue
+        pass
     else:
         if args in VALID_COMMANDS:
             print(f"{args} is a shell builtin")
