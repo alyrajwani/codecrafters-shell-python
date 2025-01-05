@@ -30,7 +30,7 @@ def handle_pwd(args):
 def handle_cd(args):
     path = "".join(args)
     try:
-        os.chdir(os.path.expanduser("{path}"))
+        os.chdir(os.path.expanduser(f"{path}"))
     except OSError:
         print(f"cd: {path}: No such file or directory")
 
