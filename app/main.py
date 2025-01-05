@@ -16,7 +16,7 @@ def main():
             case "echo":
                 print(f"{args}")
             case _:
-                print(f"{command} {args}: command not found")
+                print(f"{command}: command not found")
 
 if __name__ == "__main__":
     main()
