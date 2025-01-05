@@ -15,9 +15,13 @@ def handle_exit(args):
 
 def handle_echo(args):
     echoed = " ".join(args)
-    if (echoed[0] == '"' and echoed[-1] == '"') or (echoed[0] == "'" and echoed[-1] == "'"):
-        echoed = echoed[1:-1]
-    print(echoed)
+    args = shlex.split(echoed)
+    for i in range(len(args)):
+        if (args[i].startswith("'") and args[i].endswith("'")) or (
+            args[i].startswith('"') and args[i].endswith('"')
+        ):
+            args[i] = args[i][1:-1]  # Remove surrounding quotes
+    print(" ".join(args))
 
 def handle_type(args):
     if args[0] in VALID_COMMAND_DICT:
