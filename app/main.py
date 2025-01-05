@@ -12,7 +12,7 @@ def main():
 
         match command:
             case "exit": 
-                sys.exit(args)
+                break
             case "echo":
                 print(f"{args}")
             case _:
