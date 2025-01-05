@@ -14,10 +14,10 @@ def handle_exit(args):
     sys.exit(int(args[0]) if args else 0)
 
 def handle_echo(args):
-    for arg in args:
-        if (arg.startswith("'") and arg.endswith("'")) or (arg.startswith('"') and arg.endswith('"')):
-            arg = arg[1:-1]
-    print(" ".join(args))
+    echoed = " ".join(args)
+    if (echoed[0] == '"' and echoed[-1] == '"') or (echoed[0] == "'" and echoed[-1] == "'"):
+        echoed = echoed[1:-1]
+    print(echoed)
 
 def handle_type(args):
     if args[0] in VALID_COMMAND_DICT:
